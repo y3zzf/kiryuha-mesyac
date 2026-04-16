@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кирюха не курит</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: radial-gradient(circle at top, #200010, #000814);
+    color: white;
+    overflow: hidden;
+}
+
+/* Звезды */
+.stars {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+.star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    opacity: 0.7;
+}
+
+/* Контейнер */
+.container {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Верхний текст */
+.top-text {
+    color: #ff4444;
+    letter-spacing: 3px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* Заголовок */
+h1 {
+    font-size: 70px;
+    margin: 10px 0;
+    background: linear-gradient(90deg, #ffcc00, #ff5500);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Подпись */
+.subtitle {
+    color: #888;
+    letter-spacing: 2px;
+}
+
+/* Кнопка */
+.badge {
+    margin-top: 15px;
+    display: inline-block;
+    border: 1px solid #ffcc00;
+    padding: 8px 20px;
+    border-radius: 20px;
+    color: #ffcc00;
+    font-size: 14px;
+}
+
+/* Таймер */
+.timer {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.block {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 15px;
+    width: 90px;
+    backdrop-filter: blur(5px);
+}
+
+.number {
+    font-size: 40px;
+    color: #ffcc00;
+}
+
+.label {
+    font-size: 12px;
+    color: #aaa;
+}
+
+/* Конфетти */
+.confetti {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: red;
+    top: -10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+    <div class="top-text">🚀 НОВАЯ ЖИЗНЬ 🚀</div>
+    <h1>Кирюха не курит уже</h1>
+    <div class="subtitle">идёт отсчёт 30 дней</div>
+    <div class="badge">🔥 Держись до конца 🔥</div>
+
+    <div class="timer">
+        <div class="block">
+            <div class="number" id="days">21</div>
+            <div class="label">дней</div>
+        </div>
+        <div class="block">
+            <div class="number" id="hours">00</div>
+            <div class="label">часов</div>
+        </div>
+        <div class="block">
+            <div class="number" id="minutes">00</div>
+            <div class="label">минут</div>
+        </div>
+        <div class="block">
+            <div class="number" id="seconds">00</div>
+            <div class="label">секунд</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ===== ТАЙМЕР 21 ДЕНЬ =====
+const duration = 21 * 24 * 60 * 60 * 1000;
+
+let start = localStorage.getItem("startTime");
+
+if (!start) {
+    start = Date.now();
+    localStorage.setItem("startTime", start);
+} else {
+    start = parseInt(start);
+}
+
+function updateTimer() {
+    const now = Date.now();
+    const diff = duration - (now - start);
+
+    if (diff <= 0) {
+        document.querySelector(".container").innerHTML =
+            "<h1>🎉 30 дней пройдено, дальше больше!!</h1>";
+        return;
+    }
+
+    const d = Math.floor(diff / (1000*60*60*24));
+    const h = Math.floor((diff / (1000*60*60)) % 24);
+    const m = Math.floor((diff / (1000*60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    days.innerText = d;
+    hours.innerText = h;
+    minutes.innerText = m;
+    seconds.innerText = s;
+}
+
+setInterval(updateTimer, 1000);
+updateTimer();
+
+// ===== ЗВЁЗДЫ =====
+const stars = document.getElementById("stars");
+for (let i = 0; i < 120; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random()*100 + "%";
+    star.style.left = Math.random()*100 + "%";
+    stars.appendChild(star);
+}
+
+// ===== КОНФЕТТИ =====
+function createConfetti() {
+    const el = document.createElement("div");
+    el.className = "confetti";
+    el.style.left = Math.random()*100 + "%";
+    el.style.background = `hsl(${Math.random()*360},100%,50%)`;
+    document.body.appendChild(el);
+
+    let pos = -10;
+    const fall = setInterval(() => {
+        pos += 3;
+        el.style.top = pos + "px";
+        if (pos > window.innerHeight) {
+            el.remove();
+            clearInterval(fall);
+        }
+    }, 20);
+}
+
+setInterval(createConfetti, 200);
+</script>
+
+</body>
+</html>
